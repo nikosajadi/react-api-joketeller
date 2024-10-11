@@ -19,16 +19,26 @@ XMLHttpRequest is an older method, and Fetch API offers better functionality for
 In my opinion, the Fetch API is a more suitable choice for this project, allowing for clean and efficient API requests while keeping the codebase lightweight.
 
 **I Chose React Hooks and useEffect for API Management**
+`const [categories, setCategories] = useState([]);`
 **4** used React hooks, especially useEffect, for API calls because of its simplicity in handling side effects. useEffect triggers data fetching when the component renders and automatically re-runs when dependencies change, making the code cleaner and easier to maintain. Combined with useState, it provides efficient state management, ensuring the component responds smoothly to data changes
 * you can see the result of this step in this image:
 ![image step 1](/public/steps/1.png)
 
 
-**5**After fetching the categories and displaying them as a list on the page, I proceeded to implement the click functionality for the categories. I wrote a function `handleCategoryClick` that gets triggered when a category is clicked, passing the selected category value to the function. Then, the relevant API is called, and the result is stored in a separate variable. Finally, once the joke is retrieved, it is displayed on the screen.
-* you can see the result of this step in this image:
-![image step 1](/public/steps/2.png)
+**5** After fetching the categories and displaying them as a list on the page, I proceeded to implement the click functionality for the categories. I wrote a function `handleCategoryClick` that gets triggered when a category is clicked, passing the selected category value to the function. Then, the relevant API is called, and the result is stored in a separate variable. Finally, once the joke is retrieved, it is displayed on the screen.
+using usestate:
+  `const [joke, setJoke] = useState('');`
+* you can find the result of this step in this image:
+    ![image step 1](/public/steps/2.png)
 
-**6**  
+**6**  After completing the previous steps, I implemented an input field for searching jokes. I added both an input field and a button to the page. Then, I wrote a function that calls the relevant API `handleSearch` , passing the search query as input. The API response is stored in a variable, and this value is displayed on the page. Additionally, I added a variable to store the text entered in the input field.  
+
+  `const [searchQuery, setSearchQuery] = useState(''); //searchQuery: Holds the user input for searching jokes.`
+  `const [searchResults, setSearchResults] = useState([]);//searchResults: Stores the list of jokes `
+* you can find the result of this step in this image:
+  ![image step 1](/public/steps/3.png)
+
+
 
 
 
