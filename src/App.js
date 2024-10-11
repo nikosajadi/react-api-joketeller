@@ -4,14 +4,16 @@ import './App.css';
 function App() {
   const [categories, setCategories] = useState([]);
   const [joke, setJoke] = useState('');  // State to store the fetched joke
-  const [searchQuery, setSearchQuery] = useState(''); //searchQuery: Holds the user input for searching jokes.
-  const [searchResults, setSearchResults] = useState([]);  //searchResults: Stores the list of jokes 
-  const [error, setError] = useState(''); // State to store any error messages
+  const [searchQuery, setSearchQuery] = useState(''); // Holds the user input for searching jokes.
+  const [searchResults, setSearchResults] = useState([]);  // Stores the list of jokes from the search
+  const [loading, setLoading] = useState(false);  // State to manage loading status
+  const [error, setError] = useState('');  // State to store any error messages
 
   // Fetch the categories from the API when the component mounts
-    useEffect(() => {
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
+        setLoading(true);
         const response = await fetch('https://api.chucknorris.io/jokes/categories');
         if (!response.ok) {
           throw new Error('Failed to fetch categories');
@@ -21,16 +23,18 @@ function App() {
         setError(''); // Clear any previous errors
       } catch (err) {
         setError('Error fetching categories: ' + err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
 
-
   // Function to fetch a random joke from a clicked category
   const handleCategoryClick = async (category) => {
     try {
+      setLoading(true);
       const response = await fetch(`https://api.chucknorris.io/jokes/random?category=${category}`);
       if (!response.ok) {
         throw new Error('Failed to fetch joke');
@@ -40,31 +44,50 @@ function App() {
       setError(''); // Clear any previous errors
     } catch (err) {
       setError('Error fetching joke: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
- // Function to search jokes based on a query
+  // Function to search jokes based on a query
   const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setError('Please enter a search term');
+      return;
+    }
+
     try {
+      setLoading(true);
       const response = await fetch(`https://api.chucknorris.io/jokes/search?query=${searchQuery}`);
       if (!response.ok) {
         throw new Error('Failed to fetch search results');
       }
       const data = await response.json();
-      setSearchResults(data.result);
-      setError(''); // Clear any previous errors
+      if (data.result.length === 0) {
+        setError('No results found for the search term.');
+        setSearchResults([]);
+      } else {
+        setSearchResults(data.result);
+        setError(''); // Clear any previous errors
+      }
     } catch (err) {
       setError('Error fetching search results: ' + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="App">
       <h1>Chuck Norris Joke Categories</h1>
+
       {/* Display error messages */}
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-         {/* Display categories */}
+      {/* Display loading state */}
+      {loading && <p>Loading...</p>}
+
+      {/* Display categories */}
       <ul>
         {categories.map((category, index) => (
           <li key={index} onClick={() => handleCategoryClick(category)}>
