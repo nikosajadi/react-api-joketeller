@@ -20,7 +20,7 @@ In my opinion, the Fetch API is a more suitable choice for this project, allowin
 
 **I Chose React Hooks and useEffect for API Management**
 `const [categories, setCategories] = useState([]);`
-**4** used React hooks, especially useEffect, for API calls because of its simplicity in handling side effects. useEffect triggers data fetching when the component renders and automatically re-runs when dependencies change, making the code cleaner and easier to maintain. Combined with useState, it provides efficient state management, ensuring the component responds smoothly to data changes
+**4** used React hooks, especially useEffect in component mounts, for API calls because of its simplicity in handling side effects. useEffect triggers data fetching when the component renders and automatically re-runs when dependencies change, making the code cleaner and easier to maintain. Combined with useState, it provides efficient state management, ensuring the component responds smoothly to data changes
 * you can see the result of this step in this image:
 ![image step 1](/public/steps/1.png)
 
@@ -38,6 +38,15 @@ using usestate:
 * you can find the result of this step in this image:
   ![image step 1](/public/steps/3.png)
 
+
+**7** Error Handling
+I revisited the APIs and focused on handling potential errors. To do this, I added a variable to store any error messages. For each of the three API calls, if an error occurred, the error message was stored in this variable with an appropriate message and displayed on the page.
+**Async/Await vs.promise-based** 
+At this point, I preferred to use the `Async/Await` method instead of the traditional promise-based approach. The reason for this choice is that Async/Await simplifies the structure of the code and makes it more readable. Additionally, with Async/Await, API requests wait for the data to be fetched before continuing, which improves code clarity and avoids the long chains of `.then()` methods typical of promise-based syntax.
+
+  `const [error, setError] = useState(''); // State to store any error messages`
+        {/* Display error messages */}
+     ` {error && <p style={{ color: 'red' }}>{error}</p>}`
 
 
 
