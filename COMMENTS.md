@@ -7,6 +7,7 @@ Steps Taken:
 Added the necessary files and configuration: I created a file named `COMMENTS.md` to document the steps and decisions during the task implementation. and First, I installed the core React library using the Yarn package manager.
 
 **Step 2**
+## package manager Yarn:
 Installed the core React libraries: I used Yarn as my package manager to install the necessary React libraries.
 
 
@@ -66,11 +67,36 @@ At this point, I preferred to use the `Async/Await` method instead of the tradit
 **Step 8**  
 ## Addressing Common Issues and Adding Loading Feedback for Better UX:
 After conducting manual tests, I noticed a few issues that needed to be addressed. For example, if the user clicks the search button without entering any text, it could cause problems. To improve the user experience, I decided to add a few features: First, displaying a loading indicator while the APIs are being called, and second, handling the error when no text is entered for the search. Additionally, I implemented a way to manage the case where no category is found for the jokes.
+  ` const [loading, setLoading] = useState(false);  // State to manage loading status`  
+* you can find the result of this step in this image:
  ![image step 8](/public/steps/5.png)
+![image step 8](/public/steps/6.png)
 
 
+**Step 9**  
+## Chose Tailwind CSS for Styling:
+At this stage, I am using Tailwind CSS for styling because it allows me to quickly apply styles directly in the HTML and provides great flexibility to customize the design without the need to write custom CSS, among other benefits.
+  - Setting Up Tailwind CSS with Yarn:
+   `yarn add -D tailwindcss postcss autoprefixer ` 
+   -Then, generate the Tailwind configuration:
+     `npx tailwindcss init -p`
 
-
-
+   - In the tailwind.config.js:
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+- src/index.css:
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* you can find the result of this step in this image:
+ ![image step 9](/public/steps/7.png)
+ 
 # Tools and Libraries Used:
  * Tailwind CSS: Used for styling and creating a visually appealing design.
