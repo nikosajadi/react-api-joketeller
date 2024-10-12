@@ -9,20 +9,45 @@ function App() {
   const [loading, setLoading] = useState(false);  // State to manage loading status
   const [error, setError] = useState('');  // State to store any error messages
 
-  // Fetch the categories from the API when the component mounts
+
+// Define the duration for storing data in localStorage (2 hours in milliseconds)
+  const STORAGE_DURATION = 2 * 60 * 60 * 1000; 
+
   useEffect(() => {
+    // Function to fetch categories from API or retrieve from localStorage if still valid
     const fetchCategories = async () => {
+      setLoading(true);
+      const currentTime = new Date().getTime();
+
+      // Retrieve stored categories and the timestamp from localStorage
+      const storedData = localStorage.getItem('categories');
+      const storedTime = localStorage.getItem('categories_time');
+
+      // Check if data exists in localStorage and is within the valid storage duration
+      if (storedData && storedTime) {
+        const elapsedTime = currentTime - storedTime;
+        if (elapsedTime < STORAGE_DURATION) {
+          setCategories(JSON.parse(storedData));// Use stored categories if still valid
+          setLoading(false);
+          return;
+        }
+      }
+       // If no valid data in localStorage, fetch categories from the API
       try {
-        setLoading(true);
         const response = await fetch('https://api.chucknorris.io/jokes/categories');
         if (!response.ok) {
-          throw new Error('Failed to fetch categories');
+          throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
-        setCategories(data);
-        setError(''); // Clear any previous errors
-      } catch (err) {
-        setError('Error fetching categories: ' + err.message);
+        
+        // Store the fetched categories and timestamp in localStorage
+        localStorage.setItem('categories', JSON.stringify(data));
+        localStorage.setItem('categories_time', currentTime);
+
+        setCategories(data); // Update the state with fetched categories
+      } catch (error) {
+        setError('Failed to load categories. Please try again.');
+        console.error('Error fetching categories:', error);
       } finally {
         setLoading(false);
       }
@@ -91,7 +116,7 @@ function App() {
         {loading && <p className="text-gray-500 text-center mb-4">Loading...</p>}
 
         {/* Display categories */}
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ul className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {categories.map((category, index) => (
             <li
               key={index}

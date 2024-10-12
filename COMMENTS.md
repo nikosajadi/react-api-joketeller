@@ -74,7 +74,7 @@ After conducting manual tests, I noticed a few issues that needed to be addresse
 
 
 **Step 9**  
-## Chose Tailwind CSS for Styling:
+## Install Tailwind CSS:
 At this stage, I am using Tailwind CSS for styling because it allows me to quickly apply styles directly in the HTML and provides great flexibility to customize the design without the need to write custom CSS, among other benefits.
   - Setting Up Tailwind CSS with Yarn:
    `yarn add -D tailwindcss postcss autoprefixer ` 
@@ -95,8 +95,27 @@ module.exports = {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+**Step 10**
+## Enhancing the UI Design:
 * you can find the result of this step in this image:
- ![image step 9](/public/steps/7.png)
+ ![image step 10](/public/steps/7.png)
  
+**Step 11**
+## Optimizing Performance with LocalStorage Caching:
+To improve page load time and avoid repeated API calls for data that is unlikely to change frequently, I implemented localStorage caching. The category data, which typically remains constant, is stored for a specific duration (set to 2 hours in this case). When the method for fetching categories is called, it first checks localStorage. If the data exists and has not expired (i.e., it was stored less than 2 hours ago), the cached data is retrieved. If neither of these conditions is met, the API is called, and the returned data is displayed on the page and stored in localStorage for 2 hours. To track the expiration time, an additional field is used in localStorage.
+* you can find the result of this step in this image:
+ ![image step 11](/public/steps/8.png)
+  
+
+
+
+
+
+
+
+
+
+
 # Tools and Libraries Used:
  * Tailwind CSS: Used for styling and creating a visually appealing design.
