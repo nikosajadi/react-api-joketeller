@@ -102,13 +102,18 @@ module.exports = {
  ![image step 10](/public/steps/7.png)
  
 **Step 11**
-## Optimizing Performance with LocalStorage Caching:
+## Implement a caching mechanism with LocalStorage Caching:
 To improve page load time and avoid repeated API calls for data that is unlikely to change frequently, I implemented localStorage caching. The category data, which typically remains constant, is stored for a specific duration (set to 2 hours in this case). When the method for fetching categories is called, it first checks localStorage. If the data exists and has not expired (i.e., it was stored less than 2 hours ago), the cached data is retrieved. If neither of these conditions is met, the API is called, and the returned data is displayed on the page and stored in localStorage for 2 hours. To track the expiration time, an additional field is used in localStorage.
 * you can find the result of this step in this image:
  ![image step 11](/public/steps/8.png)
-  
 
 
+**Step 12**
+## Organizing the Project by Separating the Categories Component
+  To write cleaner code and reduce complexity, I created a separate component for the categories. I separated the UI for displaying the categories from the main page and placed it in a different file. 
+  While I could have moved the code for fetching the categories to this new component as well, I decided to keep it in the main page. This was because the categories might need to be accessed again on the main page in the future. Therefore, only the UI was moved, and the logic for fetching the categories remains in the main page.
+
+I believe that in larger projects, it's essential to break down the code into more components. For example, even a button can be a separate component to keep the codebase modular and easier to maintain but here it is unnecessary.
 
 
 

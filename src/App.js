@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import CategoryList from './components/categoryList'; 
 
 function App() {
   const [categories, setCategories] = useState([]);
@@ -8,7 +9,7 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);  // Stores the list of jokes from the search
   const [loading, setLoading] = useState(false);  // State to manage loading status
   const [error, setError] = useState('');  // State to store any error messages
-
+ 
 
 // Define the duration for storing data in localStorage (2 hours in milliseconds)
   const STORAGE_DURATION = 2 * 60 * 60 * 1000; 
@@ -54,10 +55,11 @@ function App() {
     };
 
     fetchCategories();
-  }, []);
+  }, [STORAGE_DURATION]);
 
   // Function to fetch a random joke from a clicked category
   const handleCategoryClick = async (category) => {
+   
     try {
       setLoading(true);
       const response = await fetch(`https://api.chucknorris.io/jokes/random?category=${category}`);
@@ -112,21 +114,8 @@ function App() {
         {/* Display error messages */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        {/* Display loading state */}
-        {loading && <p className="text-gray-500 text-center mb-4">Loading...</p>}
-
-        {/* Display categories */}
-        <ul className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {categories.map((category, index) => (
-            <li
-              key={index}
-              onClick={() => handleCategoryClick(category)}
-              className="cursor-pointer bg-white shadow-md rounded-lg p-4 text-center hover:bg-blue-100"
-            >
-              {category}
-            </li>
-          ))}
-        </ul>
+        {/* Display categories using CategoryList component */}
+        <CategoryList categories={categories} onCategoryClick={handleCategoryClick} />
 
         {/* Display the random joke */}
         {joke && (
@@ -135,6 +124,10 @@ function App() {
             <p className="text-lg">{joke}</p>
           </div>
         )}
+
+
+        {/* Display loading state */}
+        {loading && <p className="text-gray-500 text-center mb-4">Loading...</p>}
 
         {/* Search Input */}
         <div className="mt-8 flex flex-col items-center">
@@ -169,6 +162,8 @@ function App() {
             </ul>
           </div>
         )}
+
+ 
       </div>
     </div>
   );
