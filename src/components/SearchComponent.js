@@ -1,13 +1,26 @@
-// components/SearchComponent.js
 import React, { useState } from 'react';
+import ErrorMessage from './ErrorMessage'; // Import the ErrorMessage component
 
 const SearchComponent = ({ onSearch, loading, error, searchResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [localError, setLocalError] = useState(''); // State to manage local error
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      onSearch(searchQuery);
-      setSearchQuery('');
+    if (!searchQuery.trim()) {
+      // If the input is empty, set the local error
+      setLocalError('Please enter a search term.');
+      return;
+    }
+
+    // If the input is valid, clear the error and call the search function
+    setLocalError('');
+    onSearch(searchQuery);
+    setSearchQuery(''); // Optionally clear the input after search
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -20,18 +33,22 @@ const SearchComponent = ({ onSearch, loading, error, searchResults }) => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Enter a search term"
-          className="border border-gray-300 rounded-lg px-4 py-2"
+          className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onKeyDown={handleKeyDown}  // Listening for the Enter key
         />
         <button
           onClick={handleSearch}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
         >
           Search
         </button>
       </div>
 
-      {/* Display error messages */}
-      {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+      {/* Display local error message if input is empty */}
+      <ErrorMessage error={localError} />
+
+      {/* Display error messages from API or other errors */}
+      <ErrorMessage error={error} />
 
       {/* Display loading state */}
       {loading && <p className="text-gray-500 text-center mt-4">Loading...</p>}

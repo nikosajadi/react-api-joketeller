@@ -67,8 +67,9 @@ At this point, I preferred to use the `Async/Await` method instead of the tradit
 **Step 8**  
 ## Addressing Common Issues and Adding Loading Feedback for Better UX:
 After conducting manual tests, I noticed a few issues that needed to be addressed. For example, if the user clicks the search button without entering any text, it could cause problems. To improve the user experience, I decided to add a few features: First, displaying a loading indicator while the APIs are being called, and second, handling the error when no text is entered for the search. Additionally, I implemented a way to manage the case where no category is found for the jokes.
-- Another thing I think would help improve the user experience is clearing the input field after a search. When we type a word in the search input, it’s better if, after showing the search results, the input field gets cleared.
 
+- Another thing I think would help improve the user experience is clearing the input field after a search. When we type a word in the search input, it’s better if, after showing the search results, the input field gets cleared.
+ - This function listens for keydown events and checks if the 'Enter' key is pressed.
 
   ` const [loading, setLoading] = useState(false);  // State to manage loading status`  
 * you can find the result of this step in this image:
@@ -112,7 +113,7 @@ To improve page load time and avoid repeated API calls for data that is unlikely
 
 
 **Step 12**
-## Breaking everything down into smaller components
+## Breaking everything down into smaller components:
   To write cleaner code and reduce complexity, I've created more components, and here's what they're called: CategoryList, SearchComponent, JokeDisplay, ErrorMessage, and LoadingSpinner. Breaking everything down into smaller components like this is a way better approach.
 - I believe having more components helps make the project easier and quicker to manage.
 
