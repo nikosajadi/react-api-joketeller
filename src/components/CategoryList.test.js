@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CategoryList from './categoryList';  
+import CategoryList from './components/categoryList';
+
 
 
 test('renders categories correctly', () => {

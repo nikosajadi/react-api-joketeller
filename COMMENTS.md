@@ -67,6 +67,9 @@ At this point, I preferred to use the `Async/Await` method instead of the tradit
 **Step 8**  
 ## Addressing Common Issues and Adding Loading Feedback for Better UX:
 After conducting manual tests, I noticed a few issues that needed to be addressed. For example, if the user clicks the search button without entering any text, it could cause problems. To improve the user experience, I decided to add a few features: First, displaying a loading indicator while the APIs are being called, and second, handling the error when no text is entered for the search. Additionally, I implemented a way to manage the case where no category is found for the jokes.
+- Another thing I think would help improve the user experience is clearing the input field after a search. When we type a word in the search input, it’s better if, after showing the search results, the input field gets cleared.
+
+
   ` const [loading, setLoading] = useState(false);  // State to manage loading status`  
 * you can find the result of this step in this image:
  ![image step 8](/public/steps/5.png)
@@ -109,11 +112,10 @@ To improve page load time and avoid repeated API calls for data that is unlikely
 
 
 **Step 12**
-## Organizing the Project by Separating the Categories Component
-  To write cleaner code and reduce complexity, I created a separate component for the categories. I separated the UI for displaying the categories from the main page and placed it in a different file. 
-  While I could have moved the code for fetching the categories to this new component as well, I decided to keep it in the main page. This was because the categories might need to be accessed again on the main page in the future. Therefore, only the UI was moved, and the logic for fetching the categories remains in the main page.
+## Breaking everything down into smaller components
+  To write cleaner code and reduce complexity, I've created more components, and here's what they're called: CategoryList, SearchComponent, JokeDisplay, ErrorMessage, and LoadingSpinner. Breaking everything down into smaller components like this is a way better approach.
+- I believe having more components helps make the project easier and quicker to manage.
 
-I believe that in larger projects, it's essential to break down the code into more components. For example, even a button can be a separate component to keep the codebase modular and easier to maintain but here it is unnecessary.
 
 **Step 13**
 ## Testing Core Functionalities of the App Component
