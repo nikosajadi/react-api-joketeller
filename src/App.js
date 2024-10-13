@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import CategoryList from './components/categoryList'; 
 
+
+
+
 function App() {
   const [categories, setCategories] = useState([]);
   const [joke, setJoke] = useState('');  // State to store the fetched joke
@@ -48,7 +51,7 @@ function App() {
         setCategories(data); // Update the state with fetched categories
       } catch (error) {
         setError('Failed to load categories. Please try again.');
-        console.error('Error fetching categories:', error);
+       // console.error('Error fetching categories:', error);
       } finally {
         setLoading(false);
       }

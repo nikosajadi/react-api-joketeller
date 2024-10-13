@@ -115,7 +115,9 @@ To improve page load time and avoid repeated API calls for data that is unlikely
 
 I believe that in larger projects, it's essential to break down the code into more components. For example, even a button can be a separate component to keep the codebase modular and easier to maintain but here it is unnecessary.
 
-
+**Step 13**
+## Testing Core Functionalities of the App Component
+I created a test plan using Jest. To get started, I’ll need to install the necessary libraries. My focus is on testing both the components and the main App component.
 
 
 
@@ -124,3 +126,7 @@ I believe that in larger projects, it's essential to break down the code into mo
 
 # Tools and Libraries Used:
  * Tailwind CSS: Used for styling and creating a visually appealing design.
+
+# Testing part:
+
+**@testing-library/react | @testing-library/dom | @testing-library/jest-dom | jest :** 
