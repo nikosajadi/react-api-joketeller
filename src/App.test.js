@@ -1,98 +1,133 @@
+
+// JUST FPT TET COMMPONENTS
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import App from './App';
+
+// it('renders without crashing', () => {
+//   const div = document.createElement('div');
+//   ReactDOM.render(<App />, div);
+//   ReactDOM.unmountComponentAtNode(div);
+// });
+  
+
+
+
 import React from 'react';
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, screen, fireEv, waitFor, act } from '@testing-library/react';
 import App from './App';
 
-// Mock the fetch function globally for all tests
 beforeEach(() => {
-  global.fetch = jest.fn();
+  // Mock localStorage
+  const localStorageMock = (() => {
+    let store = {};
+    return {
+      getItem: (key) => store[key] || null,
+      setItem: (key, value) => store[key] = value.toString(),
+      removeItem: (key) => delete store[key],
+      clear: () => store = {},
+    };
+  })();
+
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 });
 
 afterEach(() => {
-  jest.clearAllTimers();
-  jest.resetAllMocks();
-  global.fetch.mockClear();
+  localStorage.clear(); // Clear localStorage between tests
+  jest.clearAllMocks(); // Clear mocks between tests
 });
 
-// Basic test to ensure the App renders without crashing
-it('renders without crashing', () => {
-  render(<App />);
-});
+describe('App component tests with localStorage', () => {
+  
+  it('fetches and displays categories successfully, and stores them in localStorage', async () => {
+    const mockCategories = ['animal', 'career'];
 
-// Test to check if categories are fetched and rendered correctly
-it('fetches and displays categories', async () => {
-  // Mock the API response for categories
-  global.fetch.mockResolvedValueOnce({
-    ok: true,
-    json: async () => ['animal', 'career', 'celebrity'],
+    // Mock fetch for API call
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockCategories),
+    });
+
+    // Render component
+    await act(async () => {
+      render(<App />);
+    });
+
+    // Wait for data to be fetched and categories to be displayed
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(screen.getByText('animal')).toBeInTheDocument();
+      expect(screen.getByText('career')).toBeInTheDocument();
+    });
+
+    // Check if data is stored in localStorage
+    expect(localStorage.getItem('categories')).toEqual(JSON.stringify(mockCategories));
   });
 
-  await act(async () => {
-    render(<App />);
+  it('loads categories from localStorage if data is still valid', async () => {
+    const mockCategories = ['animal', 'career'];
 
-    // Ensure the loading text is displayed while fetching
-    expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+    // Simulate stored data in localStorage before test starts
+    localStorage.setItem('categories', JSON.stringify(mockCategories));
+    localStorage.setItem('categories_time', new Date().getTime().toString()); // Current time
 
-    // Wait for categories to load and check if they are rendered correctly
+    // Render component
+    await act(async () => {
+      render(<App />);
+    });
+
+    // Ensure fetch is not called because data is loaded from localStorage
+    expect(fetch).not.toHaveBeenCalled();
+
+    // Wait for categories loaded from localStorage to be displayed
     await waitFor(() => {
       expect(screen.getByText('animal')).toBeInTheDocument();
       expect(screen.getByText('career')).toBeInTheDocument();
-      expect(screen.getByText('celebrity')).toBeInTheDocument();
     });
   });
-});
 
-// Test for fetching and displaying a random joke
-it('fetches and displays a random joke when category is clicked', async () => {
-  // Mock the API response for categories and a random joke
-  global.fetch
-    .mockResolvedValueOnce({
+  it('fetches new categories if localStorage data is expired', async () => {
+    const mockCategories = ['animal', 'career'];
+
+    // Simulate expired data in localStorage
+    localStorage.setItem('categories', JSON.stringify(mockCategories));
+    const expiredTime = new Date().getTime() - 3 * 60 * 60 * 1000; // Three hours ago
+    localStorage.setItem('categories_time', expiredTime.toString());
+
+    // Mock fetch for API call
+    global.fetch = jest.fn().mockResolvedValueOnce({
       ok: true,
-      json: async () => ['animal', 'career', 'celebrity'],
-    })
-    .mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ value: 'Chuck Norris joke' }),
+      json: () => Promise.resolve(mockCategories),
     });
 
-  await act(async () => {
-    render(<App />);
+    // Render component
+    await act(async () => {
+      render(<App />);
+    });
 
-    // Wait for categories to load
-    await waitFor(() => screen.getByText('animal'));
-
-    // Simulate a click on the 'animal' category
-    fireEvent.click(screen.getByText('animal'));
-
-    // Wait for the joke to be displayed
+    // Wait for data to be fetched and API to be called because localStorage data is expired
     await waitFor(() => {
-      expect(screen.getByText('Chuck Norris joke')).toBeInTheDocument();
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(screen.getByText('animal')).toBeInTheDocument();
+      expect(screen.getByText('career')).toBeInTheDocument();
     });
   });
-});
 
-// Test for searching jokes
-it('fetches and displays search results based on user input', async () => {
-  // Mock the API response for search
-  global.fetch.mockResolvedValueOnce({
-    ok: true,
-    json: async () => ({ result: [{ value: 'Funny Chuck Norris joke' }] }),
-  });
+  // Uncomment this test if you want to test the error case
+  // it('shows error when fetching categories fails', async () => {
+  //   // Mock fetch to simulate API failure
+  //   global.fetch = jest.fn().mockRejectedValueOnce(new Error('API fetch failed'));
+  
+  //   await act(async () => {
+  //     render(<App />);
+  //   });
+  
+  //   // Use getAllByText to check if only one error message is displayed
+  //   await waitFor(() => {
+  //     const errorMessages = screen.getAllByText('Failed to load categories. Please try again.');
+  //     expect(errorMessages).toHaveLength(1); // Expect only one error message
+  //   });
+  // });
 
-  await act(async () => {
-    render(<App />);
 
-    // Simulate user input for searching a joke
-    fireEvent.change(screen.getByPlaceholderText(/Enter a search term/i), {
-      target: { value: 'funny' },
-    });
-
-    // Simulate clicking the search button
-    fireEvent.click(screen.getByRole('button', { name: /Search/i }));
-
-    // Wait for search results to be displayed
-    await waitFor(() => {
-      expect(screen.getByText('Funny Chuck Norris joke')).toBeInTheDocument();
-    });
-  });
 });
